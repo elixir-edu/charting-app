@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+
+<body onload="loadHBar()">
+    <div class="ChartContainer" style="width: 800px; height:00px">
+        <canvas id="myChart"></canvas>
+    </div>
+
+
+    <script>
+
+        // bar chart sample json
+        // https://jsoneditoronline.org/?id=a78520a7faa44668b57cb00edfc8d75f
+
+        function loadLineChart() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+        }
+
+        function loadMixedChart() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var mixedChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    datasets: [{
+                        label: 'Bar Dataset',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45]
+                    }, {
+                        label: 'Line Dataset',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [-5, 10, 5, 2, 20, 30, 45],
+
+                        // Changes this dataset to become a line
+                        type: 'line'
+                    }],
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+                },
+                options: { }
+            });
+        }
+
+        function loadHBar() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var mixedChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    datasets: [{
+                        label: 'Bar Dataset',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45]
+                    }],
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+                },
+                options: { }
+            });
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
