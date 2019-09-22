@@ -19,7 +19,13 @@ class ChartDataService{
             // }
             // tickArr.push(tickInfo);
 
-            priceQtyMap[cells[3].value] = cells[4].value;
+            let price = cells[3].value;
+            if(priceQtyMap[price] != undefined){
+                priceQtyMap[price] += cells[4].value;
+            }
+            else{
+                priceQtyMap[price] = cells[4].value;
+            }
 
         }
 
