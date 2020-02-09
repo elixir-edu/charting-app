@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 
-<body onload="loadHBar()">
+<body onload="mulYAxesGrp()">
     <div class="ChartContainer" style="width: 800px; height:00px">
         <canvas id="myChart"></canvas>
     </div>
@@ -60,7 +60,7 @@
                     }],
                     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
                 },
-                options: { }
+                options: {}
             });
         }
 
@@ -76,10 +76,112 @@
                     }],
                     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
                 },
-                options: { }
+                options: {}
             });
         }
 
+        function mulYAxes() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            // var canvas = document.getElementById('chart');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5'],
+                    datasets: [{
+                        label: 'A',
+                        yAxisID: 'A',
+                        data: [100, 96, 84, 76, 69]
+                    }, {
+                        label: 'B',
+                        yAxisID: 'B',
+                        data: [1, 1, 1, 1, 0]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                        }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                max: 1,
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            });
+
+        }
+
+        function mulYAxesGrp() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            // var canvas = document.getElementById('chart');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'A',
+                        yAxisID: 'A',
+                        labels: ['1', '2', '3', '4', '5'],
+                        data: [110, 96, 84, 76, 69]
+                    }, {
+                        label: 'B',
+                        yAxisID: 'B',
+                        labels: ['1', '2', '3', '4', '5'],
+                        data: [1, 10, 15, 21, 05]
+                    }, {
+                        label: 'C',
+                        yAxisID: 'C',
+                        labels: ['1', '2', '3', '4', '5'],
+                        data: [1, 1, 1, 1, 0]
+                    }, {
+                        label: 'D',
+                        yAxisID: 'D',
+                        labels: ['1', '2', '3', '4', '5'],
+                        data: [22, 25, 27, 1, 10]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                        }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                max: 1,
+                                min: 0
+                            }
+                        }, {
+                            id: 'C',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                max: 1,
+                                min: 0
+                            }
+                        }, {
+                            id: 'D',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                max: 1,
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            });
+
+        }
 
     </script>
 

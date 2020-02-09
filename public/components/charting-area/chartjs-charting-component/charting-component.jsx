@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import ChartDataService from "./chartDataService";
+/* import ChartDataService from "./chartDataService"; */
 import ReactDOM from 'react-dom';
 import { Chart } from "chart.js/dist/Chart.bundle.min";
+import AVDataService from "../../../services/av-data.service.js";
 
 
-export class ChartingComponent extends Component {
+export class ChartJSChartingComponent extends Component {
 
     componentDidMount() {
         this.node = ReactDOM.findDOMNode(this);
@@ -52,6 +53,37 @@ export class ChartingComponent extends Component {
             });
 
         }
+    }
+
+    renderVolProf(data){
+
+        let priceArr = Object.keys(data);
+        let qtyArr = Object.values(data);
+
+        var ctx = this.node.querySelector('#' + this.chartId).getContext('2d');
+
+        var mixedChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                datasets: [{
+                    label: 'Bar Dataset',
+                    borderColor: '#000000',
+                    backgroundColor: "#000000",
+                    data: qtyArr
+                }],
+                labels: priceArr
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 20
+                        }
+                    }]
+                }
+            }
+        });
     }
 
 

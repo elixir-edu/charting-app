@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { ChartingComponent } from "./charting-component/charting-component.jsx";
+import { ChartJSChartingComponent } from "./chartjs-charting-component/charting-component.jsx";
+/* import { KendoChartingComponent } from "./kendo-charting-component/kendo-charting-component.jsx"; */
 
 export class ChartingArea extends Component {
 
@@ -46,7 +47,7 @@ export class ChartingArea extends Component {
                 </div>;
         }
         else if (this.isDataAvailable){
-            chartAreaContent = <ChartingComponent data={this.props.data}></ChartingComponent>;
+            chartAreaContent = <ChartJSChartingComponent data={this.props.data}></ChartJSChartingComponent>;
         }
         else{
             chartAreaContent = <h2 className="chart-display-label"> Your chart gets displayed here...</h2>;
