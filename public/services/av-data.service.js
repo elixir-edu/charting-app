@@ -6,14 +6,17 @@ class AVDataService {
     constructor(){
 
         this.baseURL = "https://www.alphavantage.co/";
+        this.apiKey = "JTZGZK8V8QC0UBWB";
 
         this.dataMap = { };
 
         this.volProfileDataMap = {};
 
+        this.charToSymbolMap = {};
+
     }
 
-    fetchVolProfileData (symbol, series){
+    getVolProfileData (symbol, series){
     
         return new Promise((resolve, reject) => {
             let volProfileData = this.volProfileDataMap[symbol];
@@ -36,9 +39,9 @@ class AVDataService {
         let resData = {};
         for (let key in rawData) {
             if (rawData.hasOwnProperty(key)) {
-                let tickData = obj[key];
-                let price = Math.round( (tickData["2. high"] + tickData["3. low"]) / 2 );
-                resData[price] = (resData[price] || 0) + tickData["5. volume"];
+                let tickData = rawData[key];
+                let price = Math.round( (Number(tickData["2. high"]) + Number(tickData["3. low"])) / 2 );
+                resData[price] = (resData[price] || 0) + Number(tickData["5. volume"]);
             }
         }
         return resData;
@@ -75,9 +78,49 @@ class AVDataService {
                 "query?function=" + (series || "TIME_SERIES_INTRADAY") +
                 "&symbol=" + (symbol || "MSFT") +
                 "&interval=" + (interval || "5min") +
-                "&outputsize=full&apikey=JTZGZK8V8QC0UBWB";
+                "&outputsize=full&apikey=" + this.apiKey;
 
         return url;
+    }
+
+    getSymbolList(char){
+        return new Promise((resolve, reject) => {
+            let symbolList = this.charToSymbolMap[char];
+            if(symbolList){
+                resolve(symbolList);
+            } else {
+                let url = this.baseURL +
+                    "query?function=SYMBOL_SEARCH" +
+                    "&keywords=" + char +
+                    "&outputsize=full&apikey=" + this.apiKey;
+
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        symbolList = this.formSymbolList(data["bestMatches"]);
+                        this.charToSymbolMap[char] = symbolList;
+                        resolve(symbolList);
+                    });
+            }
+        })
+    }
+    
+    /**
+     * Converts raw list to a flat  list
+     * @param {Array} rawList 
+     */
+    formSymbolList(rawList){
+        let symbolList = [];
+        rawList.forEach(function (entity, index) {
+            if(entity["3. type"] == "Equity"){
+                symbolList.push({
+                    symbol: entity["1. symbol"],
+                    name: entity["2. name"],
+                    exchange: entity["4. region"]
+                });
+            };
+        });
+        return symbolList;
     }
 
 }

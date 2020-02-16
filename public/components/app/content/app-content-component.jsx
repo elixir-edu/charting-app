@@ -7,33 +7,23 @@ export class AppContent extends Component {
 
     constructor() {
         super();
-        this.state = {
-            docUploadInProgress: false
-        };
-
-        this.docUploadHandler = this.docUploadHandler.bind(this);
-        this.docUploadStarted = this.docUploadStarted.bind(this);
+        this.state = {};
+        this.updateChart = this.updateChart.bind(this);
     }
 
-    docUploadHandler (data){
-        console.log("data: ", data);
+    updateChart (data){
         this.setState({
-            chartData: data,
-            docUploadInProgress: false
+            chartMeta: data
         });
     }
 
-    docUploadStarted (){
-        this.setState({docUploadInProgress: true});
-    }
-
     render() {
+        console.log("in app render, meta: ", this.state.chartMeta);
+
         return (
             <div className="container-fluid app-content"> 
-                <ConfigPanel docUploadHandler={this.docUploadHandler} 
-                docUploadStarted={this.docUploadStarted}></ConfigPanel>
-                <ChartingArea data={this.state.chartData} 
-                docUploadInProgress={this.state.docUploadInProgress}></ChartingArea>
+                <ConfigPanel updateChart={this.updateChart} ></ConfigPanel>
+                <ChartingArea meta={this.state.chartMeta} ></ChartingArea>
             </div>
         );
     }

@@ -7,51 +7,30 @@ import AVDataService from "../../../services/av-data.service.js";
 
 export class ChartJSChartingComponent extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentDidMount() {
         this.node = ReactDOM.findDOMNode(this);
         console.log("this.node", this.node);
-        this.renderChart();
+        /* this.renderChart(); */
+        
+        if(this.props.data){
+            this.renderVolProf(this.props.data)
+        }
+        
+        /* let symbol = this.props && this.props.meta && this.props.meta.symbol;
+        console.log("in comp did mount symbol", symbol);
+        AVDataService.getVolProfileData(symbol)
+        .then(data => {this.renderVolProf(data)}); */
     }
 
 
     componentDidUpdate() {
-        this.renderChart();
-    }
-
-    renderChart() {
-        console.log("this.props.data: ", this.props.data);
-        if (this.props.data) {
-            let uploadedData = ChartDataService.translateData(this.props.data.data);
-            console.log("priceQtyMap: ", uploadedData);
-
-            let priceArr = Object.keys(uploadedData);
-            let qtyArr = Object.values(uploadedData);
-
-            var ctx = this.node.querySelector('#' + this.chartId).getContext('2d');
-
-            var mixedChart = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: {
-                    datasets: [{
-                        label: 'Bar Dataset',
-                        borderColor: '#000000',
-                        backgroundColor: "#000000",
-                        data: qtyArr
-                    }],
-                    labels: priceArr
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                autoSkip: true,
-                                maxTicksLimit: 20
-                            }
-                        }]
-                    }
-                }
-            });
-
+        if(this.props.data){
+            this.renderVolProf(this.props.data)
         }
     }
 

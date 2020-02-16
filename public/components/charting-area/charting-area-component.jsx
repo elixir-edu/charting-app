@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AVDataService from "../../services/av-data.service.js";
 import { ChartJSChartingComponent } from "./chartjs-charting-component/charting-component.jsx";
 /* import { KendoChartingComponent } from "./kendo-charting-component/kendo-charting-component.jsx"; */
 
@@ -6,48 +7,44 @@ export class ChartingArea extends Component {
 
     constructor( props ) {
         super(props);
-        this.isDataUploadInProgress = props.docUploadInProgress;
-        this.isDataAvailable = false;
+
+        this.state= {
+            isDataFetchInProgress: false,
+            isDataAvailable: false
+        };
+        
     }
+    
+    UNSAFE_componentWillReceiveProps(props){
+        let meta = props.meta;
+        if (meta && meta.symbol){
+            this.setState({isDataFetchInProgress: true});
 
-    componentWillReceiveProps (nextProps){
-        this.isDataAvailable = false;
-        this.isDataUploadInProgress = nextProps.docUploadInProgress;
-
-        if(!nextProps.docUploadInProgress && nextProps.data){
-            this.isDataAvailable = true;
+            AVDataService.getVolProfileData(meta.symbol)
+                .then(data => { 
+                    this.setState({
+                        isDataFetchInProgress: false,
+                        isDataAvailable: true,
+                        chartData: data
+                    });
+                });
         }
-    }
-
-    loadHBar() {
-        // var ctx = this.node.querySelector('#myChart').getContext('2d');
-        // console.log("ctx", ctx);
-
-        // var mixedChart = new Chart(ctx, {
-        //     type: 'horizontalBar',
-        //     data: {
-        //         datasets: [{
-        //             label: 'Bar Dataset',
-        //             borderColor: 'rgb(255, 99, 132)',
-        //             data: [0, 10, 5, 2, 20, 30, 45]
-        //         }],
-        //         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-        //     },
-        //     options: { }
-        // });
     }
 
     render() {
 
         let chartAreaContent;
-        if(this.isDataUploadInProgress){
+        /* chartAreaContent = <ChartJSChartingComponent meta={this.props.meta}></ChartJSChartingComponent>; */
+        if(this.state.isDataFetchInProgress){
             chartAreaContent = <div className="loader-container">
                     <div className="loader"></div>
                     <h3 className="loader-msg">Data upload in progress...</h3>
                 </div>;
         }
-        else if (this.isDataAvailable){
-            chartAreaContent = <ChartJSChartingComponent data={this.props.data}></ChartJSChartingComponent>;
+        
+        else if (this.state.isDataAvailable){
+            chartAreaContent = <ChartJSChartingComponent meta={this.props.meta} 
+                                    data={this.state.chartData}></ChartJSChartingComponent>;
         }
         else{
             chartAreaContent = <h2 className="chart-display-label"> Your chart gets displayed here...</h2>;
@@ -55,7 +52,7 @@ export class ChartingArea extends Component {
 
 
         return (
-            <div className="col-md-9 charting-area" >
+            <div className="col-9 charting-area" >
                 {chartAreaContent}
             </div>
         );
