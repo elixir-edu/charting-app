@@ -8,6 +8,25 @@ class AVDataService {
         this.baseURL = "https://www.alphavantage.co/";
         this.apiKey = "JTZGZK8V8QC0UBWB";
 
+        this.intervalToSeriesMap = {
+            "1 Minute": "TIME_SERIES_INTRADAY", 
+            "5 Minutes": "TIME_SERIES_INTRADAY", 
+            "15 Minutes": "TIME_SERIES_INTRADAY", 
+            "30 Minutes": "TIME_SERIES_INTRADAY", 
+            "1 Hour": "TIME_SERIES_INTRADAY", 
+            "Daily": "TIME_SERIES_DAILY",
+            "Weekly": "TIME_SERIES_WEEKLY", 
+            "Monthly": "TIME_SERIES_MONTHLY"
+        };
+
+        this.intervalMap = {
+            "1 Minute": "1min", 
+            "5 Minutes": "5min", 
+            "15 Minutes": "15min", 
+            "30 Minutes": "30min", 
+            "1 Hour": "60min"
+        }
+
         this.dataMap = { };
 
         this.volProfileDataMap = {};
@@ -16,17 +35,21 @@ class AVDataService {
 
     }
 
-    getVolProfileData (symbol, series){
+    getVolProfileData (symbol, interval){
     
+        let series = this.intervalToSeriesMap[interval];
+        interval = this.intervalMap[interval];
+
         return new Promise((resolve, reject) => {
-            let volProfileData = this.volProfileDataMap[symbol];
+            let volProfileData = this.volProfileDataMap[symbol + interval];
             if(volProfileData){
                 resolve(volProfileData);
             }else{
-                this.fetchRawData (symbol, series)
+                this.fetchRawData (symbol, series, interval)
                 .then(rawData => {
-                    volProfileData = this.generateVolProfileData(rawData);
-                    this.volProfileDataMap[symbol] = volProfileData;
+                    let key = this.getRawDataKey(series, interval);
+                    volProfileData = this.generateVolProfileData(rawData[key]);
+                    this.volProfileDataMap[symbol + interval] = volProfileData;
                     resolve(volProfileData);
                 });
             }
@@ -34,8 +57,8 @@ class AVDataService {
 
     }
 
-    generateVolProfileData (data){
-        let rawData = data["Time Series (5min)"];
+    generateVolProfileData (rawData){
+        /*let rawData = data["Time Series (5min)"];*/
         let resData = {};
         for (let key in rawData) {
             if (rawData.hasOwnProperty(key)) {
@@ -47,7 +70,31 @@ class AVDataService {
         return resData;
     }
 
-    fetchRawData(symbol, series){
+    getRawDataKey(series, interval){
+        let key = "";
+
+        switch(series){
+            case "TIME_SERIES_INTRADAY":
+                    key = "Time Series (" + interval +")";
+                break;
+            case "TIME_SERIES_DAILY":
+                    key = "Time Series (Daily)";
+                break;
+            case "TIME_SERIES_WEEKLY": 
+                    key = "Weekly Time Series";
+                break;
+            case "TIME_SERIES_MONTHLY":
+                    key = "Monthly Time Series";
+                break;
+            default: 
+                key = "";
+                break;
+        }
+
+        return key;
+    }
+
+    fetchRawData(symbol, series, interval){
         
         return new Promise((resolve, reject) => {
             let seriesData = this.dataMap[series];
@@ -61,7 +108,7 @@ class AVDataService {
                 this.dataMap[series] = {};
             }
 
-            let url = this.formURL(symbol);
+            let url = this.formURL(symbol, series, interval);
 
             fetch(url)
                 .then(res => res.json())
@@ -76,8 +123,8 @@ class AVDataService {
     formURL (symbol, series, interval){
         let url = this.baseURL + 
                 "query?function=" + (series || "TIME_SERIES_INTRADAY") +
-                "&symbol=" + (symbol || "MSFT") +
-                "&interval=" + (interval || "5min") +
+                "&symbol=" + (symbol) +
+                "&interval=" + (interval) +
                 "&outputsize=full&apikey=" + this.apiKey;
 
         return url;

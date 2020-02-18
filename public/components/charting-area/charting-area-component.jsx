@@ -20,7 +20,7 @@ export class ChartingArea extends Component {
         if (meta && meta.symbol){
             this.setState({isDataFetchInProgress: true});
 
-            AVDataService.getVolProfileData(meta.symbol)
+            AVDataService.getVolProfileData(meta.symbol, meta.interval)
                 .then(data => { 
                     this.setState({
                         isDataFetchInProgress: false,
