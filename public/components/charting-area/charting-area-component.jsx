@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AVDataService from "../../services/av-data.service.js";
-import { ChartJSChartingComponent } from "./chartjs-charting-component/charting-component.jsx";
+import { VolProfChartingComp } from "./chartjs-charting-component/charting-component.jsx";
 /* import { KendoChartingComponent } from "./kendo-charting-component/kendo-charting-component.jsx"; */
 
 export class ChartingArea extends Component {
@@ -22,10 +22,12 @@ export class ChartingArea extends Component {
 
             AVDataService.getVolProfileData(meta.symbol, meta.interval)
                 .then(data => { 
+                    console.log("vol prof data: ", data);
                     this.setState({
                         isDataFetchInProgress: false,
                         isDataAvailable: true,
-                        chartData: data
+                        chartData: data.volProfile,
+                        ohlcData: data.ohlc
                     });
                 });
         }
@@ -34,7 +36,6 @@ export class ChartingArea extends Component {
     render() {
 
         let chartAreaContent;
-        /* chartAreaContent = <ChartJSChartingComponent meta={this.props.meta}></ChartJSChartingComponent>; */
         if(this.state.isDataFetchInProgress){
             chartAreaContent = <div className="loader-container">
                     <div className="loader"></div>
@@ -43,8 +44,8 @@ export class ChartingArea extends Component {
         }
         
         else if (this.state.isDataAvailable){
-            chartAreaContent = <ChartJSChartingComponent meta={this.props.meta} 
-                                    data={this.state.chartData}></ChartJSChartingComponent>;
+            chartAreaContent = <VolProfChartingComp meta={this.props.meta} 
+                                    data={this.state.chartData} ohlcData={this.state.ohlcData}></VolProfChartingComp>;
         }
         else{
             chartAreaContent = <h2 className="chart-display-label"> Your chart gets displayed here...</h2>;

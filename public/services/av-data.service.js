@@ -58,16 +58,28 @@ class AVDataService {
     }
 
     generateVolProfileData (rawData){
-        /*let rawData = data["Time Series (5min)"];*/
-        let resData = {};
+        /*let resData = {};*/
+        let ohlc = [];
+        let volProfile = {};
         for (let key in rawData) {
             if (rawData.hasOwnProperty(key)) {
                 let tickData = rawData[key];
-                let price = Math.round( (Number(tickData["2. high"]) + Number(tickData["3. low"])) / 2 );
-                resData[price] = (resData[price] || 0) + Number(tickData["5. volume"]);
+                let data = {
+                    t: key,
+                    o: Number(tickData["1. open"]),
+                    h: Number(tickData["2. high"]),
+                    l: Number(tickData["3. low"]),
+                    c: Number(tickData["4. close"]),
+                    vol: Number(tickData["5. volume"])
+                };
+                let {h, l} = data;
+                ohlc.push(data);
+                let price = Math.round(( h + l) / 2 );
+                /*let price = Math.round( (Number(tickData["2. high"]) + Number(tickData["3. low"])) / 2 );*/
+                volProfile[price] = (volProfile[price] || 0) + Number(tickData["5. volume"]);
             }
         }
-        return resData;
+        return {ohlc, volProfile};
     }
 
     getRawDataKey(series, interval){

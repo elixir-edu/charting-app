@@ -5,7 +5,7 @@ import { Chart } from "chart.js/dist/Chart.bundle.min";
 import AVDataService from "../../../services/av-data.service.js";
 
 
-export class ChartJSChartingComponent extends Component {
+export class VolProfChartingComp extends Component {
 
     constructor(props) {
         super(props);
@@ -30,6 +30,7 @@ export class ChartJSChartingComponent extends Component {
 
     componentDidUpdate() {
         if(this.props.data){
+            /*this.chart && this.chart.destroy();*/
             this.renderVolProf(this.props.data)
         }
     }
@@ -76,6 +77,7 @@ export class ChartJSChartingComponent extends Component {
         return (
             <div className="ChartContainer">
                 <canvas id={chartId}></canvas>
+                <canvas id={chartId+'-ohlc'}></canvas>
             </div>
         );
     }
