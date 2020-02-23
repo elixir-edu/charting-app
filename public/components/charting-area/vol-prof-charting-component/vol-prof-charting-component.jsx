@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 /* import ChartDataService from "./chartDataService"; */
 import ReactDOM from 'react-dom';
 import { Chart } from "chart.js/dist/Chart.bundle.min";
+import "chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min";
 import AVDataService from "../../../services/av-data.service.js";
+import { FinancialChartingComp } from "./../financial-charting-component/financial-charting-component.jsx";
 
 
 export class VolProfChartingComp extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {ohlc: props.ohlcData};
     }
 
     componentDidMount() {
@@ -27,6 +29,11 @@ export class VolProfChartingComp extends Component {
         .then(data => {this.renderVolProf(data)}); */
     }
 
+    UNSAFE_componentWillReceiveProps(props){
+        if(props.ohlcData){
+            this.setState({ohlc: props.ohlcData});
+        }
+    }
 
     componentDidUpdate() {
         if(this.props.data){
@@ -61,6 +68,29 @@ export class VolProfChartingComp extends Component {
                             maxTicksLimit: 20
                         }
                     }]
+                },
+                plugins: {
+                    zoom: {
+                        // Container for pan options
+                        pan: {
+                            // Boolean to enable panning
+                            enabled: true,
+        
+                            // Panning directions. Remove the appropriate direction to disable 
+                            // Eg. 'y' would only allow panning in the y direction
+                            mode: 'xy'
+                        },
+        
+                        // Container for zoom options
+                        zoom: {
+                            // Boolean to enable zooming
+                            enabled: true,
+        
+                            // Zooming directions. Remove the appropriate direction to disable 
+                            // Eg. 'y' would only allow zooming in the y direction
+                            mode: 'xy',
+                        }
+                    }
                 }
             }
         });
@@ -75,9 +105,10 @@ export class VolProfChartingComp extends Component {
 
 
         return (
-            <div className="ChartContainer">
-                <canvas id={chartId}></canvas>
-                <canvas id={chartId+'-ohlc'}></canvas>
+            <div className="ChartContainer d-flex flex-column">
+                <canvas className="d-flex flex-grow-1" id={chartId}></canvas>
+                <FinancialChartingComp id={chartId+'-ohlc'} ohlc={this.state.ohlc}></FinancialChartingComp>
+                
             </div>
         );
     }

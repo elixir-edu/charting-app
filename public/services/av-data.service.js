@@ -65,18 +65,18 @@ class AVDataService {
             if (rawData.hasOwnProperty(key)) {
                 let tickData = rawData[key];
                 let data = {
-                    t: key,
-                    o: Number(tickData["1. open"]),
-                    h: Number(tickData["2. high"]),
-                    l: Number(tickData["3. low"]),
-                    c: Number(tickData["4. close"]),
-                    vol: Number(tickData["5. volume"])
+                    t: (new Date(key)).getTime(),
+                    o: tickData["1. open"],
+                    h: tickData["2. high"],
+                    l: tickData["3. low"],
+                    c: tickData["4. close"],
+                    vol: tickData["5. volume"]
                 };
                 let {h, l} = data;
                 ohlc.push(data);
-                let price = Math.round(( h + l) / 2 );
+                let price = Math.round(( Number(h) + Number(l)) / 2 );
                 /*let price = Math.round( (Number(tickData["2. high"]) + Number(tickData["3. low"])) / 2 );*/
-                volProfile[price] = (volProfile[price] || 0) + Number(tickData["5. volume"]);
+                volProfile[price] = (volProfile[price] || 0) + Number(data.vol);
             }
         }
         return {ohlc, volProfile};
@@ -137,7 +137,7 @@ class AVDataService {
                 "query?function=" + (series || "TIME_SERIES_INTRADAY") +
                 "&symbol=" + (symbol) +
                 "&interval=" + (interval) +
-                "&outputsize=full&apikey=" + this.apiKey;
+                "&apikey=" + this.apiKey;
 
         return url;
     }

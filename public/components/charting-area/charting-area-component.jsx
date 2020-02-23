@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AVDataService from "../../services/av-data.service.js";
-import { VolProfChartingComp } from "./chartjs-charting-component/charting-component.jsx";
+import { VolProfChartingComp } from "./vol-prof-charting-component/vol-prof-charting-component.jsx";
 /* import { KendoChartingComponent } from "./kendo-charting-component/kendo-charting-component.jsx"; */
 
 export class ChartingArea extends Component {
@@ -53,7 +53,7 @@ export class ChartingArea extends Component {
 
 
         return (
-            <div className="col-9 charting-area" >
+            <div className="col-9 charting-area d-flex flex-column" >
                 {chartAreaContent}
             </div>
         );
