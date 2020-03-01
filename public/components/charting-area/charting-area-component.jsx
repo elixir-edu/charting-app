@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AVDataService from "../../services/av-data.service.js";
-import { VolProfChartingComp } from "./vol-prof-charting-component/vol-prof-charting-component.jsx";
+import { VolProfChartingComp } from "./vol-prof-charting-component/cjs-vol-prof-charting-component.jsx";
 /* import { KendoChartingComponent } from "./kendo-charting-component/kendo-charting-component.jsx"; */
 
 export class ChartingArea extends Component {
@@ -36,7 +36,9 @@ export class ChartingArea extends Component {
     render() {
 
         let chartAreaContent;
-        if(this.state.isDataFetchInProgress){
+        chartAreaContent = <VolProfChartingComp meta={this.props.meta} 
+                                    data={this.state.chartData} ohlcData={this.state.ohlcData}></VolProfChartingComp>;
+        /* if(this.state.isDataFetchInProgress){
             chartAreaContent = <div className="loader-container">
                     <div className="loader"></div>
                     <h3 className="loader-msg">Data upload in progress...</h3>
@@ -49,7 +51,7 @@ export class ChartingArea extends Component {
         }
         else{
             chartAreaContent = <h2 className="chart-display-label"> Your chart gets displayed here...</h2>;
-        }
+        } */
 
 
         return (
