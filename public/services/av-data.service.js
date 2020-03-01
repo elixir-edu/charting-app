@@ -61,7 +61,7 @@ class AVDataService {
         /*let resData = {};*/
         let ohlc = [];
         let volProfile = {};
-        for (let key in rawData) {
+        /* for (let key in rawData) {
             if (rawData.hasOwnProperty(key)) {
                 let tickData = rawData[key];
                 let data = {
@@ -75,8 +75,26 @@ class AVDataService {
                 let {h, l} = data;
                 ohlc.push(data);
                 let price = Math.round(( Number(h) + Number(l)) / 2 );
-                /*let price = Math.round( (Number(tickData["2. high"]) + Number(tickData["3. low"])) / 2 );*/
                 volProfile[price] = (volProfile[price] || 0) + Number(data.vol);
+            }
+        } */
+        for (let key in rawData) {
+            if (rawData.hasOwnProperty(key)) {
+                let tickData = rawData[key];
+
+                let o = Number(tickData["1. open"]);
+                let h = Number(tickData["2. high"]);
+                let l = Number(tickData["3. low"]);
+                let c = Number(tickData["4. close"]);
+                let vol = Number(tickData["5. volume"]);
+
+                let data = { 
+                    x: new Date(key), 
+                    y: [o, h, l, c] 
+                };
+                ohlc.push(data);
+                let price = Math.round(( h+ l) / 2 );
+                volProfile[price] = (volProfile[price] || 0) + vol;
             }
         }
         return {ohlc, volProfile};

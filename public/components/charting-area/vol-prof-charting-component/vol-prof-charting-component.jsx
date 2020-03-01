@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom';
 import { Chart } from "chart.js/dist/Chart.bundle.min";
 import "chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min";
 import AVDataService from "../../../services/av-data.service.js";
-import { FinancialChartingComp } from "./../financial-charting-component/financial-charting-component.jsx";
-
+import { FinancialChartingComp } from "./../financial-charting-component/cjs-financial-charting-component.jsx";
 
 export class VolProfChartingComp extends Component {
 
@@ -106,8 +105,8 @@ export class VolProfChartingComp extends Component {
 
         return (
             <div className="ChartContainer d-flex flex-column">
-                <canvas className="d-flex flex-grow-1" id={chartId}></canvas>
-                <FinancialChartingComp id={chartId+'-ohlc'} ohlc={this.state.ohlc}></FinancialChartingComp>
+                <canvas className="d-flex flex-grow-1 chart-vol-prof" id={chartId}></canvas>
+                <FinancialChartingComp className="chart-vol-prof-ohlc" id={chartId+'-ohlc'} ohlc={this.state.ohlc}></FinancialChartingComp>
                 
             </div>
         );
